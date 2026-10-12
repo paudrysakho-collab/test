@@ -28,6 +28,10 @@ Fichiers : `assets/audio/vo1.mp3` … `vo6.mp3`, posés sur la piste 9, groupe `
 - **vo5 décalée** de 21,4 → 22,25 s pour que « cinquante » tombe sur l'impact à 23,0 s, comme demandé.
 - **« Cave 71 » écrit « Cave soixante-et-onze »** dans le prompt TTS, sinon le modèle lit le nombre de travers.
 
+## Niveaux voix — normalisation
+Les fichiers ElevenLabs sortaient à −25,3 à −28,6 LUFS, soit 12 à 15 LU **sous** le lit musical (−13,8 LUFS) : la voix passait sous la musique au lieu de la dominer. Chaque ligne est renormalisée à −18 LUFS / −1,5 dBTP (gain plat, plus un limiteur true-peak sur les lignes dont le pic ne laissait pas la marge). Les originaux ElevenLabs intacts sont conservés dans `assets/audio/raw/`.
+Le carve a été rejoué **après** cette normalisation : son analyse doit mesurer la voix définitive, sinon elle creuse le lit pour une voix plus faible qu'elle ne l'est.
+
 ## Mixage — voiceover carve (et non un duck de volume)
 Le lit `#music` porte `data-fx-carve` (`sources: ["voiceover"]`, `strength: 0.8`) : 6 bandes creusées de 250 Hz à 2,5 kHz (−7,4 dB, −14,8 dB à 1,6 kHz) plus un étage de gain piloté par une enveloppe de 205 points, plancher −19,2 dB. Le creux suit la voix : la musique revient pleine entre les lignes au lieu de rester écrasée pendant 32 s, ce qu'aurait fait le duck 0,9 → 0,3 prévu au départ.
 Re-carver : `node .claude/skills/hyperframes-audio/scripts/carve.mjs --comp index.html` — ça remplace le carve et laisse intacts les effets ou lanes posés à la main. `sources` pointe le **groupe**, donc une 7ᵉ ligne VO ajoutée plus tard est couverte sans retoucher l'attribut.
