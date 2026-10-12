@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Cave 71 — Le coin des bonnes affaires</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Montserrat";
+        font-weight: 800;
+        src: url("assets/fonts/montserrat.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Cardo";
+        font-weight: 700;
+        src: url("assets/fonts/cardo.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Kaushan Script";
+        font-weight: 400;
+        src: url("assets/fonts/kaushan.woff2") format("woff2");
+      }
+      :root {
+        --gold: #d4a031;
+        --wine: #8a2236;
+        --cream: #f5ecd9;
+        --ink: #0a0708;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--ink);
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        color: var(--cream);
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+      }
+      .sc {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: var(--ink);
+      }
+      .abs {
+        position: absolute;
+      }
+      .bokeh {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212, 160, 49, 0.55), rgba(212, 160, 49, 0) 70%);
+      }
+      .mask {
+        display: block;
+        overflow: hidden;
+      }
+      .mask > span {
+        display: block;
+      }
+      .serif {
+        font-family: "Cardo", serif;
+        font-weight: 700;
+      }
+      .kicker {
+        font-size: 34px;
+        letter-spacing: 0.42em;
+        color: var(--gold);
+      }
+      .num {
+        font-family: "Cardo", serif;
+        font-weight: 700;
+        font-size: 64px;
+        color: var(--gold);
+        letter-spacing: 0.08em;
+      }
+      .photo {
+        position: absolute;
+        overflow: hidden;
+        border: 3px solid var(--gold);
+        border-radius: 6px;
+        background: #000;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+      }
+      .photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .card-label {
+        position: absolute;
+        width: 340px;
+        text-align: center;
+        font-size: 25px;
+        letter-spacing: 0.14em;
+        color: var(--cream);
+      }
+      .star {
+        position: absolute;
+        width: 230px;
+        height: 230px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+      }
+      .star b {
+        font-size: 78px;
+        line-height: 1;
+        font-weight: 800;
+      }
+      .star i {
+        font-style: normal;
+        font-size: 26px;
+        letter-spacing: 0.2em;
+        margin-top: 4px;
+      }
+      #legal {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+        font-size: 19px;
+        letter-spacing: 0.12em;
+        color: rgba(245, 236, 217, 0.85);
+        z-index: 50;
+      }
+      #vignette {
+        position: absolute;
+        inset: 0;
+        z-index: 40;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.55) 100%);
+      }
+      #fade-out {
+        position: absolute;
+        inset: 0;
+        z-index: 60;
+        background: #000;
+        opacity: 0;
+      }
+
+      /* ---------- S1 logo ---------- */
+      #s1-sc {
+        background: radial-gradient(ellipse at 50% 55%, #2a0e15 0%, #0a0708 62%);
+      }
+      #s1-logo-wrap {
+        position: absolute;
+        inset: 0 0 120px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #s1-logo {
+        width: 1180px;
+        display: block;
+      }
+      #s1-line {
+        left: 700px;
+        top: 760px;
+        width: 520px;
+        height: 3px;
+        background: var(--gold);
+        transform-origin: 50% 50%;
+      }
+      #s1-tag {
+        left: 0;
+        width: 1920px;
+        top: 800px;
+        text-align: center;
+        font-size: 30px;
+        letter-spacing: 0.55em;
+        color: var(--gold);
+      }
+
+      /* ---------- S2 façade ---------- */
+      #s2-img-wrap {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      #s2-img {
+        position: absolute;
+        left: -40px;
+        top: -60px;
+        width: 2050px;
+        display: block;
+      }
+      #s2-shade {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(10, 7, 8, 0.94) 0%, rgba(10, 7, 8, 0.72) 42%, rgba(10, 7, 8, 0.05) 78%);
+      }
+      #s2-kicker {
+        left: 120px;
+        top: 250px;
+      }
+      #s2-title {
+        left: 112px;
+        top: 318px;
+        font-size: 196px;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+      }
+      #s2-title .gold {
+        color: var(--gold);
+      }
+      #s2-reze {
+        left: 1070px;
+        top: 670px;
+        font-family: "Kaushan Script", cursive;
+        font-weight: 400;
+        font-size: 170px;
+        color: #ec3a26;
+        text-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+        transform-origin: 0% 100%;
+        white-space: nowrap;
+      }
+      #s2-bar {
+        left: 120px;
+        top: 760px;
+        width: 380px;
+        height: 6px;
+        background: var(--gold);
+        transform-origin: 0% 50%;
+      }
+
+      /* ---------- S3 vins ---------- */
+      #s3-img-wrap {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      #s3-img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 1080px;
+        width: 2358px;
+        display: block;
+      }
+      #s3-shade {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(10, 7, 8, 0.95) 0%, rgba(10, 7, 8, 0.8) 38%, rgba(10, 7, 8, 0) 72%),
+          linear-gradient(0deg, rgba(10, 7, 8, 0.6), rgba(10, 7, 8, 0) 40%);
+      }
+      #s3-num {
+        left: 120px;
+        top: 330px;
+      }
+      #s3-title {
+        left: 112px;
+        top: 410px;
+        font-size: 190px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+      #s3-sub {
+        left: 120px;
+        top: 640px;
+        width: 760px;
+        font-size: 50px;
+        line-height: 1.25;
+        color: var(--cream);
+      }
+      #s3-bar {
+        left: 120px;
+        top: 600px;
+        width: 220px;
+        height: 5px;
+        background: var(--gold);
+        transform-origin: 0% 50%;
+      }
+
+      /* ---------- S4 spiritueux ---------- */
+      #s4-sc {
+        background: radial-gradient(ellipse at 75% 50%, #3a1d0b 0%, #120a06 55%, #0a0708 100%);
+      }
+      #s4-num {
+        left: 120px;
+        top: 190px;
+      }
+      #s4-title {
+        left: 112px;
+        top: 270px;
+        font-size: 128px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+      #s4-list {
+        left: 120px;
+        top: 590px;
+        font-size: 66px;
+        line-height: 1.35;
+      }
+      #s4-list div {
+        display: flex;
+        align-items: center;
+      }
+      #s4-list em {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        margin-right: 28px;
+        background: var(--gold);
+        transform: rotate(45deg);
+      }
+      #s4-panel {
+        left: 1020px;
+        top: 60px;
+        width: 780px;
+        height: 940px;
+      }
+      #s4-img {
+        position: absolute;
+        left: -60px;
+        top: 0;
+        width: 900px;
+        height: 1200px;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* ---------- S5 offrir ---------- */
+      #s5-sc {
+        background: radial-gradient(ellipse at 50% 40%, #4a1320 0%, #1a0910 60%, #0a0708 100%);
+      }
+      #s5-kicker {
+        left: 0;
+        width: 1920px;
+        top: 96px;
+        text-align: center;
+      }
+      #s5-title {
+        left: 0;
+        width: 1920px;
+        top: 150px;
+        text-align: center;
+        font-size: 104px;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+      #s5-title .gold {
+        color: var(--gold);
+      }
+      .s5-photo {
+        top: 380px;
+        width: 340px;
+        height: 460px;
+      }
+      .s5-label {
+        top: 872px;
+      }
+
+      /* ---------- S6 remises ---------- */
+      #s6-sc {
+        background: radial-gradient(ellipse at 50% 45%, #5a1626 0%, #1c0a10 55%, #0a0708 100%);
+      }
+      #s6-up {
+        left: 0;
+        width: 1920px;
+        top: 112px;
+        text-align: center;
+        font-size: 74px;
+        letter-spacing: 0.3em;
+        color: var(--gold);
+      }
+      #s6-big {
+        left: 0;
+        width: 1920px;
+        top: 180px;
+        text-align: center;
+        font-size: 470px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        background: linear-gradient(180deg, #fff3c9 0%, #e7b445 55%, #a9741a 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+      }
+      .s6-star {
+        top: 722px;
+      }
+
+      /* ---------- S7 CTA ---------- */
+      #s7-sc {
+        background: radial-gradient(ellipse at 50% 60%, #2a0e15 0%, #0a0708 70%);
+      }
+      #s7-img-wrap {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        opacity: 0.16;
+      }
+      #s7-img {
+        position: absolute;
+        left: -80px;
+        top: -330px;
+        width: 2080px;
+        display: block;
+      }
+      #s7-logo {
+        left: 580px;
+        top: 70px;
+        width: 760px;
+        display: block;
+      }
+      #s7-head {
+        left: 0;
+        width: 1920px;
+        top: 330px;
+        text-align: center;
+        font-size: 58px;
+        color: var(--cream);
+      }
+      #s7-addr {
+        left: 0;
+        width: 1920px;
+        top: 450px;
+        text-align: center;
+        font-size: 84px;
+        letter-spacing: -0.01em;
+      }
+      #s7-city {
+        left: 0;
+        width: 1920px;
+        top: 556px;
+        text-align: center;
+        font-size: 84px;
+        color: var(--gold);
+      }
+      #s7-phone {
+        left: 0;
+        width: 1920px;
+        top: 700px;
+        text-align: center;
+        font-size: 138px;
+        letter-spacing: 0.02em;
+      }
+      #s7-rule {
+        left: 560px;
+        top: 676px;
+        width: 800px;
+        height: 3px;
+        background: var(--gold);
+        transform-origin: 50% 50%;
+      }
+      #s7-foot {
+        left: 0;
+        width: 1920px;
+        top: 900px;
+        text-align: center;
+        font-size: 28px;
+        letter-spacing: 0.42em;
+        color: var(--gold);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="33" data-width="1920" data-height="1080">
+      <!-- ============ S1 — LOGO ============ -->
+      <section id="s1" class="clip scene" data-start="0" data-duration="4.9" data-track-index="0">
+        <div id="s1-sc" class="sc">
+          <div id="s1-bokeh" class="abs" style="inset: 0"></div>
+          <div id="s1-logo-wrap"><img id="s1-logo" src="assets/img/logo.png" alt="Cave 71" /></div>
+          <div id="s1-line" class="abs"></div>
+          <div id="s1-tag" class="abs">REZÉ · LOIRE-ATLANTIQUE</div>
+        </div>
+      </section>
+
+      <!-- ============ S2 — FAÇADE ============ -->
+      <section id="s2" class="clip scene" data-start="4.5" data-duration="4.6" data-track-index="0">
+        <div id="s2-sc" class="sc">
+          <div id="s2-img-wrap"><img id="s2-img" src="assets/img/facade.png" alt="Façade Cave 71" /></div>
+          <div id="s2-shade"></div>
+          <div id="s2-kicker" class="abs kicker">LE COIN DES</div>
+          <div id="s2-title" class="abs">
+            <span class="mask"><span id="s2-w1">BONNES</span></span>
+            <span class="mask"><span id="s2-w2" class="gold">AFFAIRES</span></span>
+          </div>
+          <div id="s2-reze" class="abs">à Rezé</div>
+          <div id="s2-bar" class="abs"></div>
+        </div>
+      </section>
+
+      <!-- ============ S3 — VINS ============ -->
+      <section id="s3" class="clip scene" data-start="8.7" data-duration="4.7" data-track-index="0">
+        <div id="s3-sc" class="sc">
+          <div id="s3-img-wrap"><img id="s3-img" src="assets/img/vins-pano.jpg" alt="Les vins" /></div>
+          <div id="s3-shade"></div>
+          <div id="s3-num" class="abs num">01</div>
+          <div id="s3-title" class="abs">
+            <span class="mask"><span id="s3-t1">LES VINS</span></span>
+          </div>
+          <div id="s3-bar" class="abs"></div>
+          <div id="s3-sub" class="abs serif">De la Loire au Rhône, de Bordeaux au Languedoc.</div>
+        </div>
+      </section>
+
+      <!-- ============ S4 — SPIRITUEUX ============ -->
+      <section id="s4" class="clip scene" data-start="13" data-duration="5.5" data-track-index="0">
+        <div id="s4-sc" class="sc">
+          <div id="s4-num" class="abs num">02</div>
+          <div id="s4-title" class="abs">
+            <span class="mask"><span id="s4-t1">LES</span></span>
+            <span class="mask"><span id="s4-t2" style="color: var(--gold)">SPIRITUEUX</span></span>
+          </div>
+          <div id="s4-list" class="abs serif">
+            <div id="s4-l1"><em></em>Whiskies</div>
+            <div id="s4-l2"><em></em>Rhums</div>
+            <div id="s4-l3"><em></em>Gins &amp; cognacs</div>
+          </div>
+          <div id="s4-panel" class="photo"><img id="s4-img" src="assets/img/spiritueux-hd.jpg" alt="Les spiritueux" /></div>
+        </div>
+      </section>
+
+      <!-- ============ S5 — OFFRIR ============ -->
+      <section id="s5" class="clip scene" data-start="18.1" data-duration="4.9" data-track-index="0">
+        <div id="s5-sc" class="sc">
+          <div id="s5-kicker" class="abs kicker">03 · POUR LES FÊTES, POUR LES AMIS</div>
+          <div id="s5-title" class="abs">
+            <span class="mask"><span id="s5-t1">De quoi <span class="gold">faire plaisir</span></span></span>
+          </div>
+          <div id="s5-p1" class="abs photo s5-photo" style="left: 175px"><img src="assets/img/champagne.jpg" alt="" /></div>
+          <div id="s5-p2" class="abs photo s5-photo" style="left: 585px"><img src="assets/img/sacs-hd.jpg" alt="" /></div>
+          <div id="s5-p3" class="abs photo s5-photo" style="left: 995px"><img src="assets/img/chocolats.jpg" alt="" /></div>
+          <div id="s5-p4" class="abs photo s5-photo" style="left: 1405px"><img src="assets/img/terrines.jpg" alt="" /></div>
+          <div id="s5-c1" class="abs card-label s5-label" style="left: 175px">CHAMPAGNES</div>
+          <div id="s5-c2" class="abs card-label s5-label" style="left: 585px">COFFRETS CADEAUX</div>
+          <div id="s5-c3" class="abs card-label s5-label" style="left: 995px">CHOCOLATS</div>
+          <div id="s5-c4" class="abs card-label s5-label" style="left: 1405px">TERRINES &amp; BOCAUX</div>
+        </div>
+      </section>
+
+      <!-- ============ S6 — REMISES ============ -->
+      <section id="s6" class="clip scene" data-start="22.6" data-duration="4.7" data-track-index="0">
+        <div id="s6-sc" class="sc">
+          <div id="s6-bokeh" class="abs" style="inset: 0"></div>
+          <div id="s6-up" class="abs">JUSQU’À</div>
+          <div id="s6-big" class="abs">-0%</div>
+          <div id="s6-st1" class="star s6-star" data-color="#3ddc1f" style="left: 245px"><b>-10%</b><i>OFFRE</i></div>
+          <div id="s6-st2" class="star s6-star" data-color="#ffd400" style="left: 545px"><b>-20%</b><i>OFFRE</i></div>
+          <div id="s6-st3" class="star s6-star" data-color="#2196e0" style="left: 845px"><b>-30%</b><i>OFFRE</i></div>
+          <div id="s6-st4" class="star s6-star" data-color="#e8301f" style="left: 1145px"><b>-40%</b><i>OFFRE</i></div>
+          <div id="s6-st5" class="star s6-star" data-color="#f58fa0" style="left: 1445px"><b>-50%</b><i>OFFRE</i></div>
+        </div>
+      </section>
+
+      <!-- ============ S7 — CTA ============ -->
+      <section id="s7" class="clip scene" data-start="26.9" data-duration="6.1" data-track-index="0">
+        <div id="s7-sc" class="sc">
+          <div id="s7-img-wrap"><img id="s7-img" src="assets/img/facade.png" alt="" /></div>
+          <div id="s7-bokeh" class="abs" style="inset: 0"></div>
+          <img id="s7-logo" class="abs" src="assets/img/logo.png" alt="Cave 71" />
+          <div id="s7-head" class="abs serif">Venez découvrir le coin des bonnes affaires</div>
+          <div id="s7-addr" class="abs">71 AVENUE DE LA LIBÉRATION</div>
+          <div id="s7-city" class="abs">44400 REZÉ</div>
+          <div id="s7-rule" class="abs"></div>
+          <div id="s7-phone" class="abs">02 49 62 66 45</div>
+          <div id="s7-foot" class="abs">VINS &amp; SPIRITS · PROFESSIONNELS &amp; PARTICULIERS</div>
+        </div>
+      </section>
+
+      <!-- ============ overlays ============ -->
+      <div id="vignette" class="clip" data-start="0" data-duration="33" data-track-index="1"></div>
+      <div id="legal" class="clip" data-start="0" data-duration="33" data-track-index="2">
+        L’ABUS D’ALCOOL EST DANGEREUX POUR LA SANTÉ. À CONSOMMER AVEC MODÉRATION.
+      </div>
+      <div id="fade-out" class="clip" data-start="31.9" data-duration="1.1" data-track-index="3"></div>
+
+      <!-- ============ audio ============ -->
+      <audio id="music" src="assets/audio/music.mp3" data-start="0" data-duration="33" data-track-index="10" data-volume="0.8"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":1.2,"v":0.55},{"t":1.21,"v":0.55},{"t":1.3,"v":0.2},{"t":3.1,"v":0.2},{"t":3.4,"v":0.55},{"t":4.85,"v":0.55},{"t":5.1,"v":0.2},{"t":6.7,"v":0.2},{"t":7.0,"v":0.55},{"t":8.75,"v":0.55},{"t":9.0,"v":0.2},{"t":10.6,"v":0.2},{"t":10.9,"v":0.55},{"t":13.15,"v":0.55},{"t":13.4,"v":0.2},{"t":16.3,"v":0.2},{"t":16.6,"v":0.55},{"t":18.15,"v":0.55},{"t":18.4,"v":0.2},{"t":21.1,"v":0.2},{"t":21.4,"v":0.55},{"t":22.85,"v":0.55},{"t":23.1,"v":0.2},{"t":24.9,"v":0.2},{"t":25.2,"v":0.55},{"t":27.15,"v":0.55},{"t":27.4,"v":0.2},{"t":31.9,"v":0.2},{"t":32.2,"v":0.55},{"t":32.21,"v":0.55},{"t":33,"v":0}]}]}'></audio>
+      <audio id="vo1" src="assets/audio/vo1.mp3" data-start="1.3" data-duration="1.8" data-track-index="11" data-volume="1"></audio>
+      <audio id="vo2" src="assets/audio/vo2.mp3" data-start="5.1" data-duration="1.51" data-track-index="11" data-volume="1"></audio>
+      <audio id="vo3" src="assets/audio/vo3.mp3" data-start="9.0" data-duration="1.6" data-track-index="11" data-volume="1"></audio>
+      <audio id="vo4" src="assets/audio/vo4.mp3" data-start="13.4" data-duration="2.9" data-track-index="11" data-volume="1"></audio>
+      <audio id="vo5" src="assets/audio/vo5.mp3" data-start="18.4" data-duration="2.7" data-track-index="11" data-volume="1"></audio>
+      <audio id="vo6" src="assets/audio/vo6.mp3" data-start="23.1" data-duration="1.75" data-track-index="11" data-volume="1"></audio>
+      <audio id="vo7" src="assets/audio/vo7.mp3" data-start="27.4" data-duration="4.5" data-track-index="11" data-volume="1"></audio>
+
+      <audio id="sfx-w1" src="assets/audio/whoosh-cinematic.mp3" data-start="0.4" data-duration="1.4" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-hit1" src="assets/audio/impact-bass-1.mp3" data-start="1.25" data-duration="1.6" data-track-index="13" data-volume="0.7"></audio>
+      <audio id="sfx-sp1" src="assets/audio/sparkle.mp3" data-start="2.3" data-duration="1.4" data-track-index="14" data-volume="0.35"></audio>
+      <audio id="sfx-w2" src="assets/audio/whoosh-short.mp3" data-start="4.45" data-duration="0.57" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-hit2" src="assets/audio/impact-bass-1.mp3" data-start="6.95" data-duration="1.4" data-track-index="13" data-volume="0.45"></audio>
+      <audio id="sfx-w3" src="assets/audio/whoosh-short.mp3" data-start="8.65" data-duration="0.57" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-w4" src="assets/audio/whoosh-short.mp3" data-start="12.95" data-duration="0.57" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-w5" src="assets/audio/whoosh-short.mp3" data-start="18.05" data-duration="0.57" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-pop1" src="assets/audio/pop.mp3" data-start="18.6" data-duration="0.6" data-track-index="14" data-volume="0.45"></audio>
+      <audio id="sfx-pop2" src="assets/audio/pop.mp3" data-start="19.4" data-duration="0.6" data-track-index="14" data-volume="0.45"></audio>
+      <audio id="sfx-pop3" src="assets/audio/pop.mp3" data-start="20.2" data-duration="0.6" data-track-index="14" data-volume="0.45"></audio>
+      <audio id="sfx-pop4" src="assets/audio/pop.mp3" data-start="20.8" data-duration="0.6" data-track-index="14" data-volume="0.45"></audio>
+      <audio id="sfx-rise" src="assets/audio/riser.mp3" data-start="22.0" data-duration="2.9" data-track-index="12" data-volume="0.35"></audio>
+      <audio id="sfx-hit3" src="assets/audio/impact-bass-1.mp3" data-start="24.85" data-duration="1.6" data-track-index="13" data-volume="0.75"></audio>
+      <audio id="sfx-sp2" src="assets/audio/sparkle.mp3" data-start="25.0" data-duration="1.6" data-track-index="14" data-volume="0.4"></audio>
+      <audio id="sfx-w7" src="assets/audio/whoosh-short.mp3" data-start="26.8" data-duration="0.57" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="sfx-ch" src="assets/audio/chime.mp3" data-start="29.7" data-duration="2" data-track-index="14" data-volume="0.3"></audio>
+    </div>
+
+    <script>
+      /* ---- helpers (deterministic) ---- */
+      function starPolygon(points, inner) {
+        const pts = [];
+        for (let i = 0; i < points * 2; i++) {
+          const r = i % 2 === 0 ? 50 : inner;
+          const a = (Math.PI * i) / points - Math.PI / 2;
+          pts.push((50 + r * Math.cos(a)).toFixed(2) + "% " + (50 + r * Math.sin(a)).toFixed(2) + "%");
+        }
+        return "polygon(" + pts.join(",") + ")";
+      }
+      function rng(seed) {
+        let s = seed;
+        return function () {
+          s = (s * 1664525 + 1013904223) % 4294967296;
+          return s / 4294967296;
+        };
+      }
+      function makeBokeh(id, seed, count) {
+        const host = document.getElementById(id);
+        const r = rng(seed);
+        const items = [];
+        for (let i = 0; i < count; i++) {
+          const d = document.createElement("div");
+          const size = 40 + r() * 150;
+          d.className = "bokeh";
+          d.style.width = d.style.height = size + "px";
+          d.style.left = r() * 1900 + "px";
+          d.style.top = 80 + r() * 900 + "px";
+          d.style.opacity = (0.12 + r() * 0.4).toFixed(2);
+          host.appendChild(d);
+          items.push({ el: d, dy: -(60 + r() * 160), dx: (r() - 0.5) * 80 });
+        }
+        return items;
+      }
+
+      /* starburst clip-paths for the discount stickers */
+      document.querySelectorAll(".star").forEach((el) => {
+        el.style.background = el.getAttribute("data-color");
+        el.style.clipPath = starPolygon(18, 44);
+        if (el.getAttribute("data-color") === "#ffd400") el.style.color = "#1a1200";
+      });
+
+      const tl = gsap.timeline({ paused: true });
+
+      /* scene crossfades: every scene after the first fades in over the previous one */
+      [["s2-sc", 4.5], ["s3-sc", 8.7], ["s4-sc", 13], ["s5-sc", 18.1], ["s6-sc", 22.6], ["s7-sc", 26.9]].forEach(([id, t]) => {
+        tl.fromTo("#" + id, { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power2.inOut" }, t);
+      });
+
+      /* ===== S1 : logo reveal (0 → 4.9) ===== */
+      makeBokeh("s1-bokeh", 11, 16).forEach((b, i) => {
+        tl.fromTo(b.el, { y: 0, x: 0 }, { y: b.dy, x: b.dx, duration: 4.9, ease: "none" }, 0);
+      });
+      tl.fromTo("#s1-logo", { opacity: 0, scale: 0.84, filter: "blur(22px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.3, ease: "power3.out" }, 1.1);
+      tl.to("#s1-logo", { scale: 1.05, duration: 3.6, ease: "none" }, 2.4);
+      tl.fromTo("#s1-line", { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power3.inOut" }, 2.1);
+      tl.fromTo("#s1-tag", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 2.5);
+
+      /* ===== S2 : façade (4.5 → 9.1) ===== */
+      tl.fromTo("#s2-img", { scale: 1.05, x: 0 }, { scale: 1.2, x: -60, duration: 4.8, ease: "none", transformOrigin: "70% 40%" }, 4.5);
+      tl.fromTo("#s2-kicker", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 4.8);
+      tl.fromTo("#s2-w1", { yPercent: 115 }, { yPercent: 0, duration: 0.75, ease: "power4.out" }, 5.0);
+      tl.fromTo("#s2-w2", { yPercent: 115 }, { yPercent: 0, duration: 0.75, ease: "power4.out" }, 5.2);
+      tl.fromTo("#s2-bar", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.inOut" }, 5.9);
+      tl.fromTo("#s2-reze", { opacity: 0, scale: 2.2, rotation: 4 }, { opacity: 1, scale: 1, rotation: -7, duration: 0.55, ease: "back.out(1.7)" }, 6.5);
+      tl.to("#s2-reze", { rotation: -5, duration: 1.8, ease: "sine.inOut" }, 7.05);
+
+      /* ===== S3 : vins (8.7 → 13.4) ===== */
+      tl.fromTo("#s3-img", { x: 0, scale: 1.02 }, { x: -438, scale: 1.08, duration: 4.9, ease: "sine.inOut", transformOrigin: "50% 50%" }, 8.7);
+      tl.fromTo("#s3-num", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 9.0);
+      tl.fromTo("#s3-t1", { yPercent: 115 }, { yPercent: 0, duration: 0.75, ease: "power4.out" }, 9.1);
+      tl.fromTo("#s3-bar", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.inOut" }, 9.7);
+      tl.fromTo("#s3-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 10.1);
+
+      /* ===== S4 : spiritueux (13 → 18.5) ===== */
+      tl.fromTo("#s4-panel", { clipPath: "inset(0 0 0 100%)", opacity: 1 }, { clipPath: "inset(0 0 0 0%)", duration: 0.9, ease: "power4.inOut" }, 13.2);
+      tl.fromTo("#s4-img", { y: 0, scale: 1.0 }, { y: -230, scale: 1.08, duration: 5.2, ease: "sine.inOut", transformOrigin: "50% 30%" }, 13.2);
+      tl.fromTo("#s4-num", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 13.4);
+      tl.fromTo("#s4-t1", { yPercent: 115 }, { yPercent: 0, duration: 0.7, ease: "power4.out" }, 13.5);
+      tl.fromTo("#s4-t2", { yPercent: 115 }, { yPercent: 0, duration: 0.7, ease: "power4.out" }, 13.65);
+      tl.fromTo("#s4-l1", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.55, ease: "power3.out" }, 14.2);
+      tl.fromTo("#s4-l2", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.55, ease: "power3.out" }, 14.7);
+      tl.fromTo("#s4-l3", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.55, ease: "power3.out" }, 15.2);
+
+      /* ===== S5 : offrir (18.1 → 23) ===== */
+      tl.fromTo("#s5-kicker", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 18.4);
+      tl.fromTo("#s5-t1", { yPercent: 115 }, { yPercent: 0, duration: 0.75, ease: "power4.out" }, 18.5);
+      [["s5-p1", "s5-c1", 18.6, -3], ["s5-p2", "s5-c2", 19.4, 2], ["s5-p3", "s5-c3", 20.2, -2], ["s5-p4", "s5-c4", 20.8, 3]].forEach(([p, c, t, rot]) => {
+        tl.fromTo("#" + p, { opacity: 0, y: 160, rotation: rot * 3, scale: 0.85 }, { opacity: 1, y: 0, rotation: rot, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, t);
+        tl.fromTo("#" + c, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, t + 0.35);
+        tl.to("#" + p, { y: -14, duration: 2.6, ease: "sine.inOut" }, t + 0.9);
+      });
+
+      /* ===== S6 : remises (22.6 → 27.3) ===== */
+      makeBokeh("s6-bokeh", 29, 18).forEach((b) => {
+        tl.fromTo(b.el, { y: 0, x: 0 }, { y: b.dy, x: b.dx, duration: 4.7, ease: "none" }, 22.6);
+      });
+      tl.fromTo("#s6-up", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 22.9);
+      const counter = { v: 0 };
+      const bigEl = document.getElementById("s6-big");
+      tl.fromTo("#s6-big", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 23.2);
+      tl.to(counter, {
+        v: 50,
+        duration: 1.55,
+        ease: "power2.out",
+        onUpdate: () => {
+          bigEl.textContent = "-" + Math.round(counter.v) + "%";
+        },
+      }, 23.3);
+      tl.fromTo("#s6-big", { scale: 1 }, { scale: 1.07, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 }, 24.85);
+      [1, 2, 3, 4, 5].forEach((n, i) => {
+        tl.fromTo("#s6-st" + n, { opacity: 0, scale: 0, rotation: -80 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.55, ease: "back.out(1.8)" }, 25.0 + i * 0.12);
+      });
+
+      /* ===== S7 : appel (26.9 → 33) ===== */
+      tl.fromTo("#s7-img", { scale: 1.0 }, { scale: 1.12, duration: 6.1, ease: "none", transformOrigin: "60% 40%" }, 26.9);
+      makeBokeh("s7-bokeh", 53, 14).forEach((b) => {
+        tl.fromTo(b.el, { y: 0, x: 0 }, { y: b.dy, x: b.dx, duration: 6.1, ease: "none" }, 26.9);
+      });
+      tl.fromTo("#s7-logo", { opacity: 0, y: -30, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out" }, 27.2);
+      tl.fromTo("#s7-head", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 28.0);
+      tl.fromTo("#s7-addr", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 29.0);
+      tl.fromTo("#s7-city", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 29.3);
+      tl.fromTo("#s7-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.inOut" }, 29.9);
+      tl.fromTo("#s7-phone", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.5)" }, 30.2);
+      tl.fromTo("#s7-foot", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, 30.8);
+
+      /* final fade to black */
+      tl.fromTo("#fade-out", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power1.in" }, 32.0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
