@@ -11,26 +11,29 @@ Pub verticale Insta/TikTok. Promo « Le coin des bonnes affaires », du 19 septe
 Mention Loi Évin visible en permanence.
 
 ## Voix off — EN PLACE (ElevenLabs)
-Voix : **Lucie — Sensuelle, Intime, Narration** (`LAUUUZAQpu1khF4zl6Vl`), modèle `eleven_v4`, 1 prise par ligne.
-Fichiers : `assets/audio/vo1.mp3` … `vo6.mp3`, posés sur la piste 9, groupe `voiceover`.
+Voix : **Clémence — Advertising** (`LFo5X4P9PhYaOLBA9Hyh`), modèle `eleven_v4`.
+Direction de jeu : **`[warmly] [happy]`** sur chaque ligne, et **virgule au lieu des points de suspension**.
 
-| id | début | durée | texte |
-|----|-------|-------|-------|
-| vo1 | 0,9 s | 2,78 s | Il y a des soirs… qui méritent mieux. |
-| vo2 | 5,0 s | 3,17 s | Un bouchon qui saute… et le temps s'arrête. (« s'arrête » ≈ 8,1 s) |
-| vo3 | 9,4 s | 5,73 s | Des vins choisis un à un. Des spiritueux de caractère. Pour chaque célébration. |
-| vo4 | 15,6 s | 5,73 s | Du dix-neuf septembre au vingt-quatre octobre, Cave soixante-et-onze ouvre le coin des bonnes affaires. |
-| vo5 | 22,25 s | 2,05 s | Jusqu'à moins cinquante pour cent. (« cinquante » sur l'impact à 23,0 s) |
-| vo6 | 26,0 s | 5,26 s | Cave soixante-et-onze. Soixante-et-onze, avenue de la Libération, à Rezé. |
+Pourquoi la virgule : la première version sonnait érotique, et ce n'était pas la voix mais la ponctuation. « Il y a des soirs… qui méritent mieux » impose une pause suspendue au milieu d'une phrase confidentielle, que le modèle joue en souffle. La virgule enlève la suspension, les balises `[warmly] [happy]` ramènent le sourire.
 
-Écarts avec le plan initial, assumés :
-- **vo2 resserrée.** La copy d'origine (« Un bouchon qui saute. Un verre qui se remplit… et le temps s'arrête. ») durait 4,8 s pour une fenêtre image de 3,0 s (5,0 → 8,0) : « s'arrête » serait tombé à 9,8 s, bien après le figé. Le versement à 6,3 s porte déjà l'image du verre.
-- **vo5 décalée** de 21,4 → 22,25 s pour que « cinquante » tombe sur l'impact à 23,0 s, comme demandé.
-- **« Cave 71 » écrit « Cave soixante-et-onze »** dans le prompt TTS, sinon le modèle lit le nombre de travers.
+| id | début | durée | texte envoyé au modèle |
+|----|-------|-------|------------------------|
+| vo1 | 0,9 s | 2,44 s | `[warmly] [happy] Il y a des soirs, qui méritent mieux.` |
+| vo2 | 5,2 s | 2,86 s | `[warmly] [happy] Un bouchon qui saute, et le temps s'arrête.` |
+| vo3 | 9,4 s | 5,42 s | `[warmly] [happy] Des vins choisis un à un. Des spiritueux de caractère. Pour chaque célébration.` |
+| vo4 | 15,6 s | 5,50 s | `[warmly] [happy] Du dix-neuf septembre au vingt-quatre octobre, Cave soixante-et-onze ouvre le coin des bonnes affaires.` |
+| vo5 | 22,3 s | 2,29 s | `[warmly] [happy] Jusqu'à moins cinquante pour cent.` |
+| vo6 | 26,0 s | 4,85 s | `[warmly] [happy] Cave soixante-et-onze. Soixante-et-onze, avenue de la Libération, à Rezé.` |
+
+Calages : « s'arrête » tombe sur le figé à 8,0 s ; « cinquante » sur l'impact à 23,0 s ; vo6 finit à 30,85 s, juste avant le fondu de 30,9 s.
+`vo1.mp3` est **la prise exacte validée à l'écoute** (audition D3), recopiée telle quelle plutôt que regénérée : une nouvelle génération aurait donné une prise différente de celle qui a été approuvée.
+« Cave 71 » est écrit « Cave soixante-et-onze », sinon le modèle lit le nombre de travers.
+
+Voix écartées à l'écoute : Lucie (trop sensuelle — mon premier choix, mauvais), Manon et Atma (trop monotones). Les prises Lucie sont conservées dans `assets/audio/raw/lucie/`, les auditions dans `renders/auditions/`.
 
 ## Niveaux voix — normalisation
-Les fichiers ElevenLabs sortaient à −25,3 à −28,6 LUFS, soit 12 à 15 LU **sous** le lit musical (−13,8 LUFS) : la voix passait sous la musique au lieu de la dominer. Chaque ligne est renormalisée à −18 LUFS / −1,5 dBTP (gain plat, plus un limiteur true-peak sur les lignes dont le pic ne laissait pas la marge). Les originaux ElevenLabs intacts sont conservés dans `assets/audio/raw/`.
-Le carve a été rejoué **après** cette normalisation : son analyse doit mesurer la voix définitive, sinon elle creuse le lit pour une voix plus faible qu'elle ne l'est.
+Les fichiers ElevenLabs sortent très bas (−24 à −29 LUFS) face à une musique à −13,8 LUFS : sans correction la voix passe **sous** le lit. Chaque ligne est renormalisée à −18 LUFS / −1,5 dBTP (gain plat + limiteur true-peak là où le pic ne laisse pas la marge). Originaux intacts dans `assets/audio/raw/`.
+Le carve est rejoué **après** la normalisation : son analyse doit mesurer la voix définitive.
 
 ## Mixage — voiceover carve (et non un duck de volume)
 Le lit `#music` porte `data-fx-carve` (`sources: ["voiceover"]`, `strength: 0.8`) : 6 bandes creusées de 250 Hz à 2,5 kHz (−7,4 dB, −14,8 dB à 1,6 kHz) plus un étage de gain piloté par une enveloppe de 205 points, plancher −19,2 dB. Le creux suit la voix : la musique revient pleine entre les lignes au lieu de rester écrasée pendant 32 s, ce qu'aurait fait le duck 0,9 → 0,3 prévu au départ.

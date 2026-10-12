@@ -35,6 +35,56 @@
       "name": "editorial-flash-overlay",
       "type": "hyperframes:block",
       "target": "compositions/editorial-flash-overlay.html"
+    },
+    {
+      "name": "light-sweep-pass",
+      "type": "hyperframes:component",
+      "target": "compositions/components/light-sweep-pass.html"
+    },
+    {
+      "name": "gloss-sweep",
+      "type": "hyperframes:component",
+      "target": "compositions/components/gloss-sweep.html"
+    },
+    {
+      "name": "svg-mask-reveal",
+      "type": "hyperframes:component",
+      "target": "compositions/components/svg-mask-reveal.html"
+    },
+    {
+      "name": "shimmer-sweep",
+      "type": "hyperframes:component",
+      "target": "compositions/components/shimmer-sweep.html"
+    },
+    {
+      "name": "grain-field",
+      "type": "hyperframes:component",
+      "target": "compositions/components/grain-field.html"
+    },
+    {
+      "name": "focus-blur-resolve",
+      "type": "hyperframes:component",
+      "target": "compositions/components/focus-blur-resolve.html"
+    },
+    {
+      "name": "push-in",
+      "type": "hyperframes:component",
+      "target": "compositions/components/push-in.html"
+    },
+    {
+      "name": "camera-shake",
+      "type": "hyperframes:component",
+      "target": "compositions/components/camera-shake.html"
+    },
+    {
+      "name": "headline-slam",
+      "type": "hyperframes:component",
+      "target": "compositions/components/headline-slam.html"
+    },
+    {
+      "name": "number-wheel",
+      "type": "hyperframes:component",
+      "target": "compositions/components/number-wheel.html"
     }
   ]
 }
