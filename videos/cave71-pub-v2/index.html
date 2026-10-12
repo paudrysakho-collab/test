@@ -139,6 +139,7 @@
       }
       .star {
         position: absolute;
+        filter: drop-shadow(0 8px 16px rgba(7, 5, 6, 0.55));
         width: 250px;
         height: 250px;
         display: flex;
@@ -437,6 +438,56 @@
         letter-spacing: 0.38em;
         color: var(--gold);
       }
+
+      /* ===== passe de lumiere : technique du composant light-sweep-pass.
+         UNE propriete pilote tout, --light-x (scalaire ~0-100 le long de
+         l'axe du balayage). La bande ne fait que translater ; le melange
+         screen garantit que c'est une lumiere et jamais une peinture. ===== */
+      #s1-sc,
+      #s4-sc,
+      #s6-sc {
+        container-type: size;
+        --light-x: -40;
+        --lsp-angle: 112;
+      }
+      .lsp-band {
+        position: absolute;
+        inset: -55%;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        background: linear-gradient(
+          calc(var(--lsp-angle) * 1deg),
+          transparent 44%,
+          color-mix(in srgb, var(--gold-hi) 10%, transparent) 48%,
+          color-mix(in srgb, var(--gold-hi) 62%, transparent) 50%,
+          color-mix(in srgb, var(--gold-hi) 10%, transparent) 52%,
+          transparent 56%
+        );
+        opacity: 0;
+        transform: translateX(calc((var(--light-x) - 50) * 1.4cqw));
+      }
+
+      /* ===== gloss speculaire : une carte se pose et accroche une seule
+         diagonale, puis tient parfaitement immobile. ===== */
+      .gloss {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        opacity: 0;
+        background: linear-gradient(
+          104deg,
+          transparent 38%,
+          color-mix(in srgb, var(--gold-hi) 55%, transparent) 50%,
+          transparent 62%
+        );
+      }
+
+      /* Halo : rend l'or lisible sur le bordeaux ET a travers le flash
+         de 22,42-23,42 s, sans assombrir l'or le reste du plan. */
+      #s5-up {
+        text-shadow: 0 0 18px rgba(7, 5, 6, 0.9), 0 2px 4px rgba(7, 5, 6, 0.75);
+      }
     </style>
   </head>
   <body>
@@ -444,6 +495,7 @@
       <!-- ============ S1 — OUVERTURE (0 → 5) ============ -->
       <section id="s1" class="clip scene" data-start="0" data-duration="5" data-track-index="0">
         <div id="s1-sc" class="sc">
+          <div id="s1-light" class="lsp-band" data-layout-allow-overflow></div>
           <img class="bgblur" id="s1-bg" src="assets/img/champagne.jpg" alt="" />
           <div id="s1-glow" class="full"></div>
           <div id="s1-text" class="abs center-x serif">
@@ -466,7 +518,6 @@
           </div>
           <div class="shade-v"></div>
           <div id="s2-t1" class="abs center-x serif">Un bouchon qui saute.</div>
-          <div id="s2-t2" class="abs center-x serif">Un verre qui se remplit…</div>
           <div id="s2-stop-dim" class="full"></div>
           <div id="s2-stop" class="abs center-x serif">
             <div id="s2-stop-1">et le temps</div>
@@ -503,9 +554,9 @@
       <section id="s3c" class="clip scene" data-start="13.2" data-duration="2.2" data-track-index="0">
         <div id="s3c-sc" class="sc">
           <img class="bgblur" src="assets/img/sacs-hd.jpg" alt="" />
-          <div id="s3c-c1" class="photo-card"><img src="assets/img/chocolats.jpg" alt="" /></div>
-          <div id="s3c-c3" class="photo-card"><img src="assets/img/sacs-hd.jpg" alt="" /></div>
-          <div id="s3c-c2" class="photo-card"><img src="assets/img/champagne.jpg" alt="" /></div>
+          <div id="s3c-c1" class="photo-card"><img src="assets/img/chocolats.jpg" alt="" /><div id="s3c-c1-gloss" class="gloss"></div></div>
+          <div id="s3c-c3" class="photo-card"><img src="assets/img/sacs-hd.jpg" alt="" /><div id="s3c-c3-gloss" class="gloss"></div></div>
+          <div id="s3c-c2" class="photo-card"><img src="assets/img/champagne.jpg" alt="" /><div id="s3c-c2-gloss" class="gloss"></div></div>
           <div class="shade-v" style="background: linear-gradient(180deg, rgba(7,5,6,0) 50%, rgba(7,5,6,0.92) 78%)"></div>
           <div id="s3c-title" class="abs center-x s3-title" style="font-size: 104px; line-height: 1.02; letter-spacing: -0.02em">
             POUR CHAQUE <span class="gold-text">CÉLÉBRATION</span>
@@ -517,6 +568,7 @@
       <!-- ============ S4 — RÉVÉLATION + PROMO (15.2 → 21.3) ============ -->
       <section id="s4" class="clip scene" data-start="15.2" data-duration="6.1" data-track-index="0">
         <div id="s4-sc" class="sc">
+          <div id="s4-light" class="lsp-band" data-layout-allow-overflow></div>
           <img id="s4-img" src="assets/img/facade.png" alt="Façade Cave 71" />
           <div id="s4-shade" class="full"></div>
           <div id="s4-logo-wrap" class="abs"><img id="s4-logo" src="assets/img/logo.png" alt="Cave 71" /></div>
@@ -539,11 +591,11 @@
             <div id="s5-up" class="abs center-x serif">jusqu’à</div>
             <div id="s5-big" class="abs center-x gold-text">-0%</div>
             <div id="s5-sel" class="abs center-x">SUR UNE SÉLECTION</div>
-            <div id="s5-st1" class="star" data-color="#3ddc1f" style="left: 60px; top: 1080px"><b>-10%</b><i>OFFRE</i></div>
-            <div id="s5-st2" class="star" data-color="#ffd400" style="left: 415px; top: 1040px"><b>-20%</b><i>OFFRE</i></div>
-            <div id="s5-st3" class="star" data-color="#2196e0" style="left: 770px; top: 1080px"><b>-30%</b><i>OFFRE</i></div>
-            <div id="s5-st4" class="star" data-color="#e8301f" style="left: 230px; top: 1340px"><b>-40%</b><i>OFFRE</i></div>
-            <div id="s5-st5" class="star" data-color="#f58fa0" style="left: 600px; top: 1340px"><b>-50%</b><i>OFFRE</i></div>
+            <div id="s5-st1" class="star" data-color="#4a1020" style="left: 60px; top: 1080px"><b>-10%</b><i>OFFRE</i></div>
+            <div id="s5-st2" class="star" data-color="#6d1527" style="left: 415px; top: 1040px"><b>-20%</b><i>OFFRE</i></div>
+            <div id="s5-st3" class="star" data-color="#8f2a1f" style="left: 770px; top: 1080px"><b>-30%</b><i>OFFRE</i></div>
+            <div id="s5-st4" class="star" data-color="#b3761f" style="left: 230px; top: 1340px"><b>-40%</b><i>OFFRE</i></div>
+            <div id="s5-st5" class="star" data-color="#e9b64a" data-ink="dark" style="left: 600px; top: 1340px"><b>-50%</b><i>OFFRE</i></div>
           </div>
         </div>
       </section>
@@ -551,6 +603,7 @@
       <!-- ============ S6 — APPEL (25.6 → 32) ============ -->
       <section id="s6" class="clip scene" data-start="25.6" data-duration="6.4" data-track-index="0">
         <div id="s6-sc" class="sc">
+          <div id="s6-light" class="lsp-band" data-layout-allow-overflow></div>
           <img id="s6-img" src="assets/img/facade.png" alt="" />
           <img id="s6-logo" class="abs" src="assets/img/logo.png" alt="Cave 71" />
           <div id="s6-tag" class="abs center-x serif">Le coin des bonnes affaires</div>
@@ -564,7 +617,7 @@
       </section>
 
       <!-- ============ registry overlays ============ -->
-      <div id="leak-host" class="clip" data-composition-id="organic-light-leak-overlay" data-composition-src="compositions/organic-light-leak-overlay.html" data-start="14.9" data-duration="4" data-width="1080" data-height="1920" data-track-index="4" style="position: absolute; inset: 0; z-index: 65; pointer-events: none"></div>
+      <div id="leak-host" class="clip" data-composition-id="organic-light-leak-overlay" data-composition-src="compositions/organic-light-leak-overlay.html" data-start="14.9" data-duration="4" data-width="1080" data-height="1920" data-track-index="4" style="position: absolute; inset: 0; z-index: 65; pointer-events: none; opacity: 0.3"></div>
       <div id="flash-host" class="clip" data-composition-id="editorial-flash-overlay" data-composition-src="compositions/editorial-flash-overlay.html" data-start="22.42" data-duration="1" data-width="1080" data-height="1920" data-track-index="5" style="position: absolute; inset: 0; z-index: 66; pointer-events: none"></div>
 
       <!-- ============ global overlays ============ -->
@@ -651,7 +704,7 @@
       document.querySelectorAll(".star").forEach((el) => {
         el.style.background = el.getAttribute("data-color");
         el.style.clipPath = starPolygon(18, 44);
-        if (el.getAttribute("data-color") === "#ffd400") el.style.color = "#1a1200";
+        if (el.getAttribute("data-ink") === "dark") el.style.color = "#241603";
       });
 
       const tl = gsap.timeline({ paused: true });
@@ -698,8 +751,7 @@
       tl.fromTo("#s2-card", { rotationY: 16, rotationX: 4, scale: 0.9, y: 60 }, { rotationY: -3, rotationX: 0, scale: 1.0, y: 0, duration: 3.4, ease: "power1.out" }, 4.6);
       tl.fromTo("#s2-sweep", { xPercent: -70 }, { xPercent: 70, duration: 1.6, ease: "sine.inOut" }, 5.3);
       tl.fromTo("#s2-t1", { opacity: 0, y: 20, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 5.0);
-      tl.fromTo("#s2-t2", { opacity: 0, y: 20, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 6.3);
-      tl.to(["#s2-t1", "#s2-t2"], { opacity: 0, duration: 0.3, ease: "power1.in" }, 7.7);
+      tl.to("#s2-t1", { opacity: 0, duration: 0.3, ease: "power1.in" }, 7.7);
       tl.fromTo("#s2-stop-dim", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 8.0);
       tl.fromTo("#s2-card", { filter: "saturate(1) brightness(1)" }, { filter: "saturate(0.25) brightness(0.8)", duration: 0.25, ease: "power2.out", immediateRender: false }, 8.0);
       tl.fromTo("#s2-stop-1", { opacity: 0, scale: 1.12, filter: "blur(8px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" }, 8.0);
@@ -741,7 +793,7 @@
       tl.to(counter, {
         v: 50,
         duration: 1.3,
-        ease: "power3.in",
+        ease: "none",
         onUpdate: () => {
           bigEl.textContent = "-" + Math.round(counter.v) + "%";
         },
@@ -768,6 +820,37 @@
       tl.fromTo("#s6-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.inOut" }, 28.6);
       tl.fromTo("#s6-phone", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.5)" }, 28.9);
       tl.fromTo("#s6-foot", { opacity: 0 }, { opacity: 1, duration: 0.7, ease: "power2.out" }, 29.5);
+
+
+      /* ===== PASSE DE LUMIERE (3 plans heros) =====
+         Un proxy numerique par plan ; --light-x est ecrit dans onUpdate,
+         jamais tweene comme chaine var(). Deterministe et seek-safe : la
+         valeur ne depend que de la progression du tween. */
+      function lightPass(sceneId, bandId, t, dur, peak) {
+        const scene = document.getElementById(sceneId);
+        const band = document.getElementById(bandId);
+        const px = { v: -40 };
+        tl.to(px, {
+          v: 140,
+          duration: dur,
+          ease: "sine.inOut",
+          onUpdate: () => scene.style.setProperty("--light-x", px.v),
+        }, t);
+        // la bande s'allume en entrant dans le cadre et s'eteint en sortant
+        tl.fromTo(band, { opacity: 0 }, { opacity: peak, duration: dur * 0.3, ease: "power2.out" }, t);
+        tl.to(band, { opacity: 0, duration: dur * 0.45, ease: "power2.in" }, t + dur * 0.55);
+      }
+      lightPass("s1-sc", "s1-light", 1.1, 3.2, 0.42);
+      lightPass("s4-sc", "s4-light", 15.9, 4.4, 0.16);
+      lightPass("s6-sc", "s6-light", 26.2, 4.6, 0.20);
+
+      /* ===== GLOSS : chaque carte de S3c accroche une diagonale quand elle
+         se pose, puis tient immobile. Caler sur l'arrivee des cartes
+         (13.3 / 13.45 / 13.6) decalee du temps de pose. */
+      [["s3c-c1-gloss", 13.6], ["s3c-c3-gloss", 13.75], ["s3c-c2-gloss", 13.9]].forEach(([id, t]) => {
+        tl.fromTo("#" + id, { opacity: 0, xPercent: -60 }, { opacity: 0.85, xPercent: 0, duration: 0.3, ease: "power2.out" }, t);
+        tl.to("#" + id, { opacity: 0, xPercent: 60, duration: 0.45, ease: "power2.in" }, t + 0.3);
+      });
 
       tl.fromTo("#fade-out", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power1.in" }, 31.0);
 

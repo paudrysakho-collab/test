@@ -42,3 +42,28 @@ Re-carver : `node .claude/skills/hyperframes-audio/scripts/carve.mjs --comp inde
 ## Audio en place
 Musique originale générée (numpy) : piano + battement de cœur, silence « le temps s'arrête » à 8,0 s, montage 120 bpm, révélation 15,3 s, riser, impact à 23,0 s, résolution.
 Bruitages : bouchon (5,0 s), versement (6,3 s), whoosh, impacts, sparkle.
+
+## Redesign — « Lumière & matière »
+Direction choisie par le client parmi trois. Elle repose sur des **composants** du registre (pas des blocks) : les blocks sont tous écrits en 1920×1080 et il aurait fallu les réécrire en portrait, là où les composants s'adaptent nativement au 9:16.
+
+**Passe de lumière** (technique de `light-sweep-pass`, collée dans la composition plutôt qu'imbriquée : le composant est bâti autour d'un slot où l'on reconstruit sa scène, ce qui aurait demandé de démonter les 6 scènes). Une seule propriété `--light-x` pilote tout, écrite dans `onUpdate` depuis un proxy numérique — jamais tweenée comme chaîne `var()`, donc déterministe et seek-safe. Pics : S1 0,42 / S4 0,16 / S6 0,20.
+
+**Gloss spéculaire** sur les trois cartes de S3c, calé sur leur pose.
+
+### Ce que l'inspection visuelle a corrigé
+Les frames ont été capturées avec `hyperframes snapshot` et **regardées**, pas seulement mesurées. Quatre défauts que la mesure seule n'aurait pas trouvés :
+
+1. **Première passe de lumière trop forte.** En `mix-blend-mode: screen` sur une scène déjà claire, elle relevait les noirs et lisait comme du brouillard laiteux. Dégradé resserré (44→56 % au lieu de 36→64 %) pour qu'elle lise comme un reflet, pics S4 et S6 divisés par ~2,5.
+2. **`#leak-host` noyait S4.** Le light-leak du registre monte à 0,9 d'opacité en screen sur 14,9→18,9 s, pile sur la façade : le plan était un voile orange illisible. Tempéré à 0,3 **depuis l'hôte**, sans toucher au block du registre (pic effectif 0,27).
+3. **L'écran affichait « jusqu'à -0% ».** Le compteur utilisait `power3.in`, qui stagne près de zéro au départ. Passé en linéaire : il lit −10 % → −27 % → −50 % et atterrit toujours pile sur l'impact à 23,0 s. La dramaturgie vient du punch d'échelle, du shake et du flash, pas de l'ease.
+4. **Pastilles de remise en vert/jaune/bleu/rouge/rose** — registre catalogue discount, à l'opposé du brief. Restylées en échelle bordeaux → or : plus la remise est forte, plus la pastille est lumineuse, donc l'œil monte vers le −50 %.
+
+### Contraste `#s5-up` : warning assumé
+`check` signale 1,11:1 à 23,111 s et suggère `rgb(107,82,29)`. **Suivre cette suggestion dégraderait le plan.** L'or `#d9a63a` sur le bordeaux `#5c1424` est déjà à ~6:1 ; le 1,11:1 est mesuré pendant `#flash-host` (22,42→23,42 s), qui lave la frame à 0,92 d'opacité pendant ~0,2 s. L'or suggéré, plus sombre, tomberait à ~1,9:1 sur le bordeaux pendant les 4 s où le texte est réellement lu. Corrigé à la place par un **halo sombre** (`text-shadow`), qui aide l'œil sur le bordeaux comme à travers le flash. Le checker ne lit que la couleur, pas l'ombre portée, donc le warning reste — sciemment.
+
+### Écartés
+- `product-turntable` (la bouteille qui tourne sur socle studio) : demande un modèle 3D GLB, on n'a que des JPG.
+- `svg-mask-reveal` : demande un wordmark SVG, le logo est un PNG.
+- `camera-shake` : les plans concernés ont déjà des tweens GSAP sur `x`/`scale` ; ajouter une transform dessus serait entré en conflit. À faire via un wrapper si on y revient.
+- `number-wheel`, `shimmer-sweep`, `grain-field`, `focus-blur-resolve`, `push-in` : la composition réimplémentait déjà ces effets à la main (compteur, shimmer par `backgroundPosition`, grain, flous de révélation). Les remplacer aurait été du bruit sans gain.
+
