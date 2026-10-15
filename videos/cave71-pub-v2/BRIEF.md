@@ -38,7 +38,7 @@ Le carve a été rejoué sur les voix Gacrux.
 | fichier | format | usage | source |
 |---------|--------|-------|--------|
 | `renders/cave71-reel-9x16.mp4` | 1080×1920 | Reels Instagram et Facebook | `index.html` |
-| `renders/cave71-fil-4x5.mp4` | 1080×1350 | publication dans le fil Facebook et Instagram | `feed-4x5.html`, **généré** |
+| `renders/cave71-fil-4x5.mp4` | 1080×1350, 32,2 s | publication dans le fil Facebook et Instagram | `feed-4x5.html`, **généré**, « Il y a des soirs… » en 1ʳᵉ image |
 | `renders/cave71-story-9x16.mp4` | 1080×1920, **29,5 s** | Stories (limite 30 s) | le Reel accéléré de 9 %, écran final en 1ʳᵉ image |
 
 `index.html` est la seule source. `feed-4x5.html` en est un recadrage centré, produit par `scripts/make-feed-4x5.py` : la scène garde ses 1920 px et remonte de 285 px, et seuls les éléments qui sortiraient du cadre 4:5 ou passeraient sous la mention légale sont replacés (« Un bouchon qui saute », logo de fin, sous-titres vins/spiritueux, 2ᵉ rangée de pastilles). Bandes cinéma et mention Loi Évin sont ramenées dans le cadre.
@@ -47,6 +47,7 @@ Piège : le runtime impose la taille déclarée (1350) en style inline sur `#roo
 Story : le Reel est accéléré de 9 % en entier (image + son, hauteur de voix conservée) plutôt que coupé : une coupe casserait la musique générée et ses points de synchro, alors qu'une accélération uniforme les garde tous.
 **Miniature** : Facebook ne laisse pas choisir la miniature d'une story et prend la 1ʳᵉ image, qui était un fond noir. La story s'ouvre donc sur l'écran final complet (image du Reel à 30,6 s : logo, « Dernier week-end », adresse, téléphone), tenu 0,18 s puis fondu de 0,12 s vers l'intro ; le son est retardé d'autant (l'impact « -50 % » tombe à 0,18 + 23,0 / 1,09 = 21,28 s).
 Commande : `ffmpeg -ss 30.6 -i renders/v2-gacrux.mp4 -frames:v 1 endcard.png`, puis `ffmpeg -loop 1 -framerate 30 -t 0.3 -i endcard.png -i renders/v2-gacrux.mp4 -filter_complex "[0:v]format=yuv420p,setsar=1,fps=30,settb=AVTB[a];[1:v]setpts=PTS/1.09,fps=30,format=yuv420p,setsar=1,settb=AVTB[b];[a][b]xfade=transition=fade:duration=0.12:offset=0.18[v];[1:a]rubberband=tempo=1.09:pitch=1:formant=preserved:pitchq=quality:transients=smooth,volume=3.3dB,alimiter=limit=0.84:level=false,adelay=180:all=1[au]" -map [v] -map [au] -shortest …` (le +3,3 dB compense la perte de niveau de rubberband).
+**Miniature de la publication 4:5** : comme pour la story, Facebook prend la 1ʳᵉ image, qui était vide. Le rendu 4:5 s'ouvre sur son image à 4,2 s (« Il y a des soirs… / qui méritent mieux. » complets, demande client), tenue 0,18 s puis fondu de 0,12 s vers le début ; son retardé de 0,18 s. Même commande que la story, sans `setpts`/`rubberband`/`volume` : `[1:v]fps=30,…[b]` et `[1:a]adelay=180:all=1[au]`.
 Livraison : H.264 CRF 21, AAC 192 kb/s 48 kHz, 30 i/s, `faststart`.
 
 ## Niveaux voix — normalisation
