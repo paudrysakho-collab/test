@@ -7,37 +7,32 @@ duration: 32s
 ---
 # Cave 71 — « Le temps s'arrête » (v2)
 
-Pub verticale Insta/TikTok. Promo « Le coin des bonnes affaires », du 19 septembre au 24 octobre 2026, jusqu'à -50 % sur une sélection.
+Pub verticale Insta/TikTok, postée le vendredi et le samedi du dernier week-end de la promo « Le coin des bonnes affaires », jusqu'à -50 % sur une sélection.
+**Aucune date affichée ni dite** (demande client du 15/10) : le message est « dernier week-end pour profiter du coin des bonnes affaires ». Les anciennes dates (19/09 → 24/10) ont été retirées de S4, de S6 et de la voix.
 Mention Loi Évin visible en permanence.
 
-## Voix off — EN PLACE (ElevenLabs)
-Voix : **Clémence — Advertising** (`LFo5X4P9PhYaOLBA9Hyh`), modèle `eleven_v4`.
-Direction de jeu : **`[warmly] [happy]`** sur chaque ligne, et **virgule au lieu des points de suspension**.
+## Voix off — Google Gemini, voix **Gacrux** (choisie par le client à l'audition)
+Remplace Clémence (ElevenLabs), dont le compte refuse désormais toute génération. Prises Clémence conservées dans `assets/audio/raw/elevenlabs-clemence/`.
 
-Pourquoi la virgule : la première version sonnait érotique, et ce n'était pas la voix mais la ponctuation. « Il y a des soirs… qui méritent mieux » impose une pause suspendue au milieu d'une phrase confidentielle, que le modèle joue en souffle. La virgule enlève la suspension, les balises `[warmly] [happy]` ramènent le sourire.
+| id | début | durée | texte | modèle |
+|----|-------|-------|-------|--------|
+| vo1 | 0,9 s | 2,61 s | Il y a des soirs, qui méritent mieux. | gemini-3.8-flash-tts (la prise exacte de l'audition) |
+| vo2 | 5,4 s | 3,34 s | Un bouchon qui saute, et le temps s'arrête. | gemini-3.8-flash-tts |
+| vo3 | 9,25 s | 5,80 s | Des vins choisis un à un. Des spiritueux de caractère. Pour chaque célébration. | gemini-3.8-flash-tts |
+| vo4 | 16,4 s | 4,23 s | Dernier week-end, pour profiter du coin des bonnes affaires. | gemini-3.1-flash-tts-preview |
+| vo5 | 21,45 s | 2,69 s | Jusqu'à moins cinquante pour cent. | gemini-3.1-flash-tts-preview |
+| vo6 | 25,75 s | 5,67 s | Cave soixante-et-onze. Soixante-et-onze, avenue de la Libération, à Rezé. | gemini-3.1-flash-tts-preview |
 
-| id | début | durée | texte envoyé au modèle |
-|----|-------|-------|------------------------|
-| vo1 | 0,9 s | 2,44 s | `[warmly] [happy] Il y a des soirs, qui méritent mieux.` |
-| vo2 | 5,65 s | 2,86 s | `[warmly] [happy] Un bouchon qui saute, et le temps s'arrête.` |
-| vo3 | 9,4 s | 5,42 s | `[warmly] [happy] Des vins choisis un à un. Des spiritueux de caractère. Pour chaque célébration.` |
-| vo4 | 15,6 s | 5,50 s | `[warmly] [happy] Du dix-neuf septembre au vingt-quatre octobre, Cave soixante-et-onze ouvre le coin des bonnes affaires.` |
-| vo5 | 22,3 s | 2,29 s | `[warmly] [happy] Jusqu'à moins cinquante pour cent.` |
-| vo6 | 26,0 s | 4,85 s | `[warmly] [happy] Cave soixante-et-onze. Soixante-et-onze, avenue de la Libération, à Rezé.` |
+Consigne envoyée avant chaque texte : `Say warmly and with a smile, in French, like an elegant premium wine shop commercial:`.
 
-Calages : « s'arrête » finit à 8,3 s, pile quand le mot s'affiche (8,35 s) ; « cinquante » sur l'impact à 23,0 s ; vo6 finit à 30,85 s, juste avant le fondu de 30,9 s.
-`vo1.mp3` est **la prise exacte validée à l'écoute** (audition D3), recopiée telle quelle plutôt que regénérée : une nouvelle génération aurait donné une prise différente de celle qui a été approuvée.
-« Cave 71 » est écrit « Cave soixante-et-onze », sinon le modèle lit le nombre de travers.
+Pièges Gemini, à refaire à chaque nouvelle prise :
+- **gemini-3.8-flash-tts lit la consigne à voix haute** au lieu de l'appliquer (le ton est quand même joué sur la phrase). La consigne est coupée au silence qui précède le premier mot. gemini-3.1 l'applique sans la lire.
+- **Chaque prise finit par ~0,2 s de grésillement** (« télé qui bug »), pic vers −12 dB au-dessus de 6 kHz, juste après le dernier silence. Coupé au début de ce silence + fondu de 80 ms.
+- Quota gratuit : 3 requêtes/minute et **10 par jour et par modèle**, d'où le mélange 3.8 / 3.1 (même voix, validé à l'oreille par le client).
+- Gacrux parle plus lentement que Clémence : dans vo3, les deux pauses entre les phrases ont été raccourcies (−0,25 s et −0,20 s) plutôt que d'accélérer la voix, pour finir avant l'impact du logo à 15,3 s.
 
-Voix écartées à l'écoute : Lucie (trop sensuelle — mon premier choix, mauvais), Manon et Atma (trop monotones). Les prises Lucie sont conservées dans `assets/audio/raw/lucie/`, les auditions dans `renders/auditions/`.
-
-### Recalage voix ↔ image (relecture du 15/10)
-Mesuré sur les silences de chaque prise, pas à l'oreille :
-- **vo2** démarrait à 5,2 s : « et le temps s'arrête » était fini à 7,87 s, avant même que le texte apparaisse (8,0 / 8,35 s). Décalé à **5,65 s**. Le bouchon (5,0 s) part maintenant juste avant « Un bouchon qui saute ».
-- **S3c** : « Pour chaque célébration » est dit à 13,44 s mais le titre n'arrivait qu'à 14,0 s. Titre avancé à **13,45 s**.
-- **S4** : la voix dit les **dates d'abord** (15,8 → 18,05 s) puis « Cave 71 ouvre le coin des bonnes affaires » (18,2 → 20,9 s), alors que l'écran montrait l'inverse (titre 17,7 s, dates 19,0 s) : chaque info s'affichait pendant que la voix disait l'autre. L'ordre de l'image suit maintenant la voix : logo monte à 16,6 s, cartouche dates à **17,0 s**, « LE COIN DES BONNES AFFAIRES » à **18,9 → 19,25 s**.
-  La solution propre aurait été de regénérer vo4 dans l'ordre de l'image, mais ElevenLabs refuse toute génération depuis cette session (« Free Tier access has been disabled »).
-- Le carve a été rejoué après le déplacement de vo2.
+Calages : « s'arrête » finit vers 8,35 s avec le mot à l'écran ; « Pour chaque célébration » démarre à 13,57 s, titre à 13,55 s ; « Dernier week-end » tombe sur le cartouche (16,9 s), « le coin des bonnes affaires » sur le titre (18,9 → 19,25 s) ; « cinquante » sur l'impact à 23,0 s.
+Le carve a été rejoué sur les voix Gacrux.
 
 ## Niveaux voix — normalisation
 Les fichiers ElevenLabs sortent très bas (−24 à −29 LUFS) face à une musique à −13,8 LUFS : sans correction la voix passe **sous** le lit. Chaque ligne est renormalisée à −18 LUFS / −1,5 dBTP (gain plat + limiteur true-peak là où le pic ne laisse pas la marge). Originaux intacts dans `assets/audio/raw/`.
