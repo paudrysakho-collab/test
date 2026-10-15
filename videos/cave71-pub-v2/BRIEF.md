@@ -2,7 +2,7 @@
 workflow: general-video
 flow: automation
 storyboard: no
-format: 1080x1920 (9:16)
+format: 1080x1920 (9:16, Reels) + 1080x1350 (4:5, fil Facebook / Instagram)
 duration: 32s
 ---
 # Cave 71 — « Le temps s'arrête » (v2)
@@ -33,6 +33,17 @@ Pièges Gemini, à refaire à chaque nouvelle prise :
 
 Calages : « s'arrête » finit vers 8,35 s avec le mot à l'écran ; « Pour chaque célébration » démarre à 13,57 s, titre à 13,55 s ; « Dernier week-end » tombe sur le cartouche (16,9 s), « le coin des bonnes affaires » sur le titre (18,9 → 19,25 s) ; « cinquante » sur l'impact à 23,0 s.
 Le carve a été rejoué sur les voix Gacrux.
+
+## Formats de diffusion
+| fichier | format | usage | source |
+|---------|--------|-------|--------|
+| `renders/cave71-reel-9x16.mp4` | 1080×1920 | Reels Instagram et Facebook | `index.html` |
+| `renders/cave71-fil-4x5.mp4` | 1080×1350 | publication dans le fil Facebook et Instagram | `feed-4x5.html`, **généré** |
+
+`index.html` est la seule source. `feed-4x5.html` en est un recadrage centré, produit par `scripts/make-feed-4x5.py` : la scène garde ses 1920 px et remonte de 285 px, et seuls les éléments qui sortiraient du cadre 4:5 ou passeraient sous la mention légale sont replacés (« Un bouchon qui saute », logo de fin, sous-titres vins/spiritueux, 2ᵉ rangée de pastilles). Bandes cinéma et mention Loi Évin sont ramenées dans le cadre.
+Après toute retouche : `python3 scripts/make-feed-4x5.py`, puis `npx hyperframes render -c feed-4x5.html`.
+Piège : le runtime impose la taille déclarée (1350) en style inline sur `#root`, d'où les `!important` dans le CSS généré.
+Livraison : H.264 CRF 21, AAC 192 kb/s 48 kHz, 30 i/s, `faststart`.
 
 ## Niveaux voix — normalisation
 Les fichiers ElevenLabs sortent très bas (−24 à −29 LUFS) face à une musique à −13,8 LUFS : sans correction la voix passe **sous** le lit. Chaque ligne est renormalisée à −18 LUFS / −1,5 dBTP (gain plat + limiteur true-peak là où le pic ne laisse pas la marge). Originaux intacts dans `assets/audio/raw/`.
