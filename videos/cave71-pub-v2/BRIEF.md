@@ -19,17 +19,25 @@ Pourquoi la virgule : la première version sonnait érotique, et ce n'était pas
 | id | début | durée | texte envoyé au modèle |
 |----|-------|-------|------------------------|
 | vo1 | 0,9 s | 2,44 s | `[warmly] [happy] Il y a des soirs, qui méritent mieux.` |
-| vo2 | 5,2 s | 2,86 s | `[warmly] [happy] Un bouchon qui saute, et le temps s'arrête.` |
+| vo2 | 5,65 s | 2,86 s | `[warmly] [happy] Un bouchon qui saute, et le temps s'arrête.` |
 | vo3 | 9,4 s | 5,42 s | `[warmly] [happy] Des vins choisis un à un. Des spiritueux de caractère. Pour chaque célébration.` |
 | vo4 | 15,6 s | 5,50 s | `[warmly] [happy] Du dix-neuf septembre au vingt-quatre octobre, Cave soixante-et-onze ouvre le coin des bonnes affaires.` |
 | vo5 | 22,3 s | 2,29 s | `[warmly] [happy] Jusqu'à moins cinquante pour cent.` |
 | vo6 | 26,0 s | 4,85 s | `[warmly] [happy] Cave soixante-et-onze. Soixante-et-onze, avenue de la Libération, à Rezé.` |
 
-Calages : « s'arrête » tombe sur le figé à 8,0 s ; « cinquante » sur l'impact à 23,0 s ; vo6 finit à 30,85 s, juste avant le fondu de 30,9 s.
+Calages : « s'arrête » finit à 8,3 s, pile quand le mot s'affiche (8,35 s) ; « cinquante » sur l'impact à 23,0 s ; vo6 finit à 30,85 s, juste avant le fondu de 30,9 s.
 `vo1.mp3` est **la prise exacte validée à l'écoute** (audition D3), recopiée telle quelle plutôt que regénérée : une nouvelle génération aurait donné une prise différente de celle qui a été approuvée.
 « Cave 71 » est écrit « Cave soixante-et-onze », sinon le modèle lit le nombre de travers.
 
 Voix écartées à l'écoute : Lucie (trop sensuelle — mon premier choix, mauvais), Manon et Atma (trop monotones). Les prises Lucie sont conservées dans `assets/audio/raw/lucie/`, les auditions dans `renders/auditions/`.
+
+### Recalage voix ↔ image (relecture du 15/10)
+Mesuré sur les silences de chaque prise, pas à l'oreille :
+- **vo2** démarrait à 5,2 s : « et le temps s'arrête » était fini à 7,87 s, avant même que le texte apparaisse (8,0 / 8,35 s). Décalé à **5,65 s**. Le bouchon (5,0 s) part maintenant juste avant « Un bouchon qui saute ».
+- **S3c** : « Pour chaque célébration » est dit à 13,44 s mais le titre n'arrivait qu'à 14,0 s. Titre avancé à **13,45 s**.
+- **S4** : la voix dit les **dates d'abord** (15,8 → 18,05 s) puis « Cave 71 ouvre le coin des bonnes affaires » (18,2 → 20,9 s), alors que l'écran montrait l'inverse (titre 17,7 s, dates 19,0 s) : chaque info s'affichait pendant que la voix disait l'autre. L'ordre de l'image suit maintenant la voix : logo monte à 16,6 s, cartouche dates à **17,0 s**, « LE COIN DES BONNES AFFAIRES » à **18,9 → 19,25 s**.
+  La solution propre aurait été de regénérer vo4 dans l'ordre de l'image, mais ElevenLabs refuse toute génération depuis cette session (« Free Tier access has been disabled »).
+- Le carve a été rejoué après le déplacement de vo2.
 
 ## Niveaux voix — normalisation
 Les fichiers ElevenLabs sortent très bas (−24 à −29 LUFS) face à une musique à −13,8 LUFS : sans correction la voix passe **sous** le lit. Chaque ligne est renormalisée à −18 LUFS / −1,5 dBTP (gain plat + limiteur true-peak là où le pic ne laisse pas la marge). Originaux intacts dans `assets/audio/raw/`.
