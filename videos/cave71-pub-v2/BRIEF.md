@@ -39,10 +39,12 @@ Le carve a été rejoué sur les voix Gacrux.
 |---------|--------|-------|--------|
 | `renders/cave71-reel-9x16.mp4` | 1080×1920 | Reels Instagram et Facebook | `index.html` |
 | `renders/cave71-fil-4x5.mp4` | 1080×1350 | publication dans le fil Facebook et Instagram | `feed-4x5.html`, **généré** |
+| `renders/cave71-story-9x16.mp4` | 1080×1920, **29,6 s** | Stories (limite 30 s) | le Reel accéléré de 8 % |
 
 `index.html` est la seule source. `feed-4x5.html` en est un recadrage centré, produit par `scripts/make-feed-4x5.py` : la scène garde ses 1920 px et remonte de 285 px, et seuls les éléments qui sortiraient du cadre 4:5 ou passeraient sous la mention légale sont replacés (« Un bouchon qui saute », logo de fin, sous-titres vins/spiritueux, 2ᵉ rangée de pastilles). Bandes cinéma et mention Loi Évin sont ramenées dans le cadre.
 Après toute retouche : `python3 scripts/make-feed-4x5.py`, puis `npx hyperframes render -c feed-4x5.html`.
 Piège : le runtime impose la taille déclarée (1350) en style inline sur `#root`, d'où les `!important` dans le CSS généré.
+Story : le Reel est accéléré de 8 % en entier (image + son, hauteur de voix conservée) plutôt que coupé : une coupe casserait la musique générée et ses points de synchro, alors qu'une accélération uniforme les garde tous (l'impact « -50 % » tombe à 21,3 s = 23,0 / 1,08). Commande : `ffmpeg -i renders/v2-gacrux.mp4 -filter_complex "[0:v]setpts=PTS/1.08,fps=30[v];[0:a]rubberband=tempo=1.08:pitch=1:formant=preserved:pitchq=quality:transients=smooth,volume=3.3dB,alimiter=limit=0.84:level=false[a]" -map [v] -map [a] …` (le +3,3 dB compense la perte de niveau de rubberband, retour à −15,9 LUFS).
 Livraison : H.264 CRF 21, AAC 192 kb/s 48 kHz, 30 i/s, `faststart`.
 
 ## Niveaux voix — normalisation
